@@ -15,7 +15,7 @@ OutputDir=Output
 OutputBaseFilename=OpenCmdHere_Setup_v{#MyAppVersion}
 Compression=lzma2/ultra64
 SolidCompression=yes
-ArchitecturesInstallIn64BitMode=x64
+ArchitecturesInstallIn64BitMode=x64compatible
 ShowLanguageDialog=yes
 
 [Languages]
@@ -26,12 +26,12 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Source: "bin\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 
 [Registry]
-; context-menu for folders
-Root: HKCR; Subkey: "Directory\shell\OpenCmdHere"; ValueType: string; ValueData: "Eingabeaufforderung hier öffnen"; Flags: uninsdeletekey
+; Context menu for right-clicking a folder
+Root: HKCR; Subkey: "Directory\shell\OpenCmdHere"; ValueType: string; ValueName: "MUIVerb"; ValueData: "@shell32.dll,-8506"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "Directory\shell\OpenCmdHere"; ValueType: string; ValueName: "Icon"; ValueData: "cmd.exe"
 Root: HKCR; Subkey: "Directory\shell\OpenCmdHere\command"; ValueType: string; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
 
-; context-menu for background of opened folders
-Root: HKCR; Subkey: "Directory\Background\shell\OpenCmdHere"; ValueType: string; ValueData: "Eingabeaufforderung hier öffnen"; Flags: uninsdeletekey
+; Context menu for right-clicking inside an open folder (Background)
+Root: HKCR; Subkey: "Directory\Background\shell\OpenCmdHere"; ValueType: string; ValueName: "MUIVerb"; ValueData: "@shell32.dll,-8506"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "Directory\Background\shell\OpenCmdHere"; ValueType: string; ValueName: "Icon"; ValueData: "cmd.exe"
 Root: HKCR; Subkey: "Directory\Background\shell\OpenCmdHere\command"; ValueType: string; ValueData: """{app}\{#MyAppExeName}"" ""%V"""
