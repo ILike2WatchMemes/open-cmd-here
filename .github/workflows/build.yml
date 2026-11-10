@@ -35,7 +35,7 @@ jobs:
           New-Item -ItemType Directory -Force -Path "$PWD\bin"
           
           # Run Aut2exe directly to capture native stdout/stderr and exit codes
-          & "C:\Program Files (x86)\AutoIt3\Aut2exe\Aut2exe.exe" /in "$PWD\src\OpenCmdHere.au3" /out "$PWD\bin\OpenCmdHere.exe" /x64
+          & Aut2exe.exe /in "$PWD\src\OpenCmdHere.au3" /out "$PWD\bin\OpenCmdHere.exe" /x64
           
           if ($LASTEXITCODE -ne 0 -or -not (Test-Path "$PWD\bin\OpenCmdHere.exe")) {
             Write-Error "AutoIt compilation failed."
