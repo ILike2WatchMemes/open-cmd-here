@@ -42,7 +42,7 @@ jobs:
             exit 1
           }
 
-      - name: Extract Tag Version (Optional)
+      - name: Extract Tag Version
         id: get_version
         shell: powershell
         run: |

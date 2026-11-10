@@ -1,6 +1,5 @@
 #define MyAppName "Open CMD Here"
-#define MyAppVersion "1.0.0"
-#define MyAppPublisher "Schultz Solutions"
+#define MyAppPublisher "Justus Schultz"
 #define MyAppExeName "OpenCmdHere.exe"
 
 [Setup]
