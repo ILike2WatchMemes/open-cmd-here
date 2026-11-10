@@ -14,18 +14,19 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup AutoIt
-        uses: ISAutoIt/setup-autoit@v1
+      - name: Install AutoIt via Chocolatey
+        run: |
+          choco install autoit --no-progress -y
 
       - name: Compile AutoIt Script
         run: |
           mkdir bin
           Aut2exe.exe /in "src\OpenCmdHere.au3" /out "bin\OpenCmdHere.exe" /x64
 
-      - name: Build Inno Setup Installer
+      - name: Inno Setup Action
         uses: Minionguyjpro/Inno-Setup-Action@v1.3.0
         with:
-          filepath: setup.iss
+          path: setup.iss
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
