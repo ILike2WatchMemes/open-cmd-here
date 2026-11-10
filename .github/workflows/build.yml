@@ -20,8 +20,8 @@ jobs:
 
       - name: Compile AutoIt Script
         run: |
-          mkdir bin
-          Aut2exe.exe /in "src\OpenCmdHere.au3" /out "bin\OpenCmdHere.exe" /x64
+          mkdir -Force bin
+          & "C:\Program Files (x86)\AutoIt3\Aut2exe\Aut2exe.exe" /in "src\OpenCmdHere.au3" /out "bin\OpenCmdHere.exe" /x64
 
       - name: Inno Setup Action
         uses: Minionguyjpro/Inno-Setup-Action@v1.3.0
