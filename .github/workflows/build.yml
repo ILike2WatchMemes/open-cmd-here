@@ -23,7 +23,7 @@ jobs:
           Aut2exe.exe /in "src\OpenCmdHere.au3" /out "bin\OpenCmdHere.exe" /x64
 
       - name: Inno Setup Action
-  	uses: Minionguyjpro/Inno-Setup-Action@v1.3.0
+	uses: Minionguyjpro/Inno-Setup-Action@v1.3.0
         with:
           filepath: setup.iss
 
