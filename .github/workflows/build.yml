@@ -6,6 +6,9 @@ on:
       - 'v*'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: windows-latest
@@ -14,22 +17,47 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Cache Chocolatey Packages
+        uses: actions/cache@v4
+        with:
+          path: ~\AppData\Local\Temp\chocolatey
+          key: ${{ runner.os }}-choco-autoit-${{ hashFiles('src/OpenCmdHere.au3') }}
+          restore-keys: |
+            ${{ runner.os }}-choco-autoit-
+
       - name: Install AutoIt via Chocolatey
         run: |
           choco install autoit --no-progress -y
 
       - name: Compile AutoIt Script
+        shell: powershell
         run: |
-          mkdir -Force bin
-          & "C:\Program Files (x86)\AutoIt3\Aut2exe\Aut2exe.exe" /in "src\OpenCmdHere.au3" /out "bin\OpenCmdHere.exe" /x64
+          New-Item -ItemType Directory -Force -Path "$PWD\bin"
+          
+          # Run Aut2exe directly to capture native stdout/stderr and exit codes
+          & "C:\Program Files (x86)\AutoIt3\Aut2exe\Aut2exe.exe" /in "$PWD\src\OpenCmdHere.au3" /out "$PWD\bin\OpenCmdHere.exe" /x64
+          
+          if ($LASTEXITCODE -ne 0 -or -not (Test-Path "$PWD\bin\OpenCmdHere.exe")) {
+            Write-Error "AutoIt compilation failed."
+            exit 1
+          }
 
-      - name: Inno Setup Action
+      - name: Extract Tag Version (Optional)
+        id: get_version
+        shell: powershell
+        run: |
+          $version = if ("${{ github.ref_type }}" -eq "tag") { "${{ github.ref_name }}" } else { "v0.0.0-dev" }
+          echo "VERSION=$version" >> $env:GITHUB_ENV
+
+      - name: Compile Inno Setup Script
         uses: Minionguyjpro/Inno-Setup-Action@v1.3.0
         with:
           path: setup.iss
+          options: /DMyAppVersion=${{ env.VERSION }}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: OpenCmdHere-Installer
+          name: OpenCmdHere-Installer-${{ env.VERSION }}
           path: Output/*.exe
+          if-no-files-found: error
