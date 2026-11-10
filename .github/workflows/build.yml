@@ -22,8 +22,8 @@ jobs:
           mkdir bin
           Aut2exe.exe /in "src\OpenCmdHere.au3" /out "bin\OpenCmdHere.exe" /x64
 
-      - name: Build Inno Setup Installer
-        uses: EngineSoftware/inno-setup-action@v1
+      - name: Inno Setup Action
+  	uses: Minionguyjpro/Inno-Setup-Action@v1.3.0
         with:
           filepath: setup.iss
 
