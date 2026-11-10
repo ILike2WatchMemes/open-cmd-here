@@ -1,0 +1,10 @@
+# Inno Setup Output & Binaries
+Output/
+bin/
+*.exe
+
+# AutoIt Temporary Files
+*.tmp
+*.log
+.DS_Store
+Thumbs.db
