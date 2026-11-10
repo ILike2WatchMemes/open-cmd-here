@@ -1,10 +1,10 @@
 #define MyAppName "Open CMD Here"
 #define MyAppPublisher "Justus Schultz"
-#define MyAppVersion "1.0.1"
+#define MyAppVersion "1.0.2"
 #define MyAppExeName "OpenCmdHere.exe"
 
 [Setup]
-AppId={{8F7A3C12-9B3E-4A1D-B2C5-91A234567890}
+AppId={{EC1EC422-2B31-4C05-B29F-BA7E70491B6E}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
