@@ -26,12 +26,12 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Source: "bin\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 
 [Registry]
-; Kontextmenü für Ordner
+; context-menu for folders
 Root: HKCR; Subkey: "Directory\shell\OpenCmdHere"; ValueType: string; ValueData: "Eingabeaufforderung hier öffnen"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "Directory\shell\OpenCmdHere"; ValueType: string; ValueName: "Icon"; ValueData: "cmd.exe"
 Root: HKCR; Subkey: "Directory\shell\OpenCmdHere\command"; ValueType: string; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
 
-; Kontextmenü für den Hintergrund eines geöffneten Ordners
+; context-menu for background of opened folders
 Root: HKCR; Subkey: "Directory\Background\shell\OpenCmdHere"; ValueType: string; ValueData: "Eingabeaufforderung hier öffnen"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "Directory\Background\shell\OpenCmdHere"; ValueType: string; ValueName: "Icon"; ValueData: "cmd.exe"
 Root: HKCR; Subkey: "Directory\Background\shell\OpenCmdHere\command"; ValueType: string; ValueData: """{app}\{#MyAppExeName}"" ""%V"""
