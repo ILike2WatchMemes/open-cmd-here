@@ -1,4 +1,4 @@
-name: Build Installer
+name: Build & Release Installer
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -16,6 +16,14 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
+      - name: Cache Chocolatey Packages
+        uses: actions/cache@v4
+        with:
+          path: ~\AppData\Local\Temp\chocolatey
+          key: ${{ runner.os }}-choco-autoit-${{ hashFiles('src/OpenCmdHere.au3') }}
+          restore-keys: |
+            ${{ runner.os }}-choco-autoit-
 
       - name: Install AutoIt via Chocolatey
         run: |
@@ -26,7 +34,7 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force -Path "$PWD\bin"
           
-          # Run Aut2exe directly to capture native stdout/stderr and exit codes
+          # Compile 64-bit binary directly
           & "C:\Program Files (x86)\AutoIt3\Aut2exe\Aut2exe.exe" /in "$PWD\src\OpenCmdHere.au3" /out "$PWD\bin\OpenCmdHere.exe" /x64
 
       - name: Extract Tag Version
@@ -42,9 +50,16 @@ jobs:
           path: setup.iss
           options: /DMyAppVersion=${{ env.VERSION }}
 
-      - name: Upload Artifact
+      - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: OpenCmdHere-Installer-${{ env.VERSION }}
           path: Output/*.exe
           if-no-files-found: error
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: Output/*.exe
+          generate_release_notes: true
