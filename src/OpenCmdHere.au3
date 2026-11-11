@@ -1,3 +1,4 @@
+#NoTrayIcon
 If $CmdLine[0] >= 1 Then
     Local $selectedFolder = $CmdLine[1]
 
@@ -29,7 +30,7 @@ If $CmdLine[0] >= 1 Then
     $windowTitle = StringReplace($windowTitle, "{path}", $selectedFolder)
 
     ; Launch cmd with customized window title
-    Run(@ComSpec & ' /k title ' & $windowTitle & ' && cd /d "' & $selectedFolder & '" && cls', "", @SW_SHOW)
+    Run(@ComSpec & ' /k "title ' & $windowTitle & ' && cd /d ""' & $selectedFolder & '"" && cls"', "", @SW_SHOW)
 Else
     MsgBox(48, "Error", "No folder selected.")
 EndIf
