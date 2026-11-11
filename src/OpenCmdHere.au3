@@ -1,14 +1,35 @@
-If $CmdLine[0] = 1 Then
+If $CmdLine[0] >= 1 Then
     Local $selectedFolder = $CmdLine[1]
 
-    ; Load the localized "Command Prompt" string from Windows shell32.dll (Resource -22022)
+    ; Strip trailing backslashes (e.g., "C:\" -> "C:") for uniform parsing
+    $selectedFolder = StringRegExpReplace($selectedFolder, '[\\/]+$', '')
+    If StringLen($selectedFolder) = 2 And StringRight($selectedFolder, 1) = ":" Then
+        $selectedFolder &= "\" ; Keep root drive backslash intact (e.g., "C:\")
+    EndIf
+
+    ; Load localized "Command Prompt" string from shell32.dll (Resource -22022)
     Local $localizedCmdName = _GetMUIString("@shell32.dll,-22022")
     If $localizedCmdName = "" Then $localizedCmdName = "Command Prompt" ; Fallback if reading fails
 
     Local $folderName = StringRegExpReplace($selectedFolder, '.*[\\]', '')
+    If $folderName = "" Then $folderName = $selectedFolder
 
-    ; Title format: "Command Prompt - folderName"
-    Run(@ComSpec & ' /k title ' & $localizedCmdName & ' - ' & $folderName & ' && cd /d ' & $selectedFolder & ' && cls', "", @SW_SHOW)
+    ; Read title format from Registry (Default: "{cmd} - {folder}")
+    ; Supported tokens:
+    ;   {cmd}    -> Localized Command Prompt name (e.g., "Eingabeaufforderung")
+    ;   {folder} -> Directory name (e.g., "src")
+    ;   {path}   -> Full directory path (e.g., "C:\Projects\src")
+    Local $titleFormat = RegRead("HKCU\Software\OpenCmdHere", "TitleFormat")
+    If @error Or $titleFormat = "" Then $titleFormat = "{cmd}"
+
+    ; Replace tokens
+    Local $windowTitle = $titleFormat
+    $windowTitle = StringReplace($windowTitle, "{cmd}", $localizedCmdName)
+    $windowTitle = StringReplace($windowTitle, "{folder}", $folderName)
+    $windowTitle = StringReplace($windowTitle, "{path}", $selectedFolder)
+
+    ; Launch cmd with customized window title
+    Run(@ComSpec & ' /k title ' & $windowTitle & ' && cd /d "' & $selectedFolder & '" && cls', "", @SW_SHOW)
 Else
     MsgBox(48, "Error", "No folder selected.")
 EndIf
