@@ -15,7 +15,7 @@ If $CmdLine[0] >= 1 Then
     Local $folderName = StringRegExpReplace($selectedFolder, '.*[\\]', '')
     If $folderName = "" Then $folderName = $selectedFolder
 
-    ; Read title format from Registry (Default: "{cmd} - {folder}")
+    ; Read title format from Registry (Default: "{cmd}")
     ; Supported tokens:
     ;   {cmd}    -> Localized Command Prompt name (e.g., "Eingabeaufforderung")
     ;   {folder} -> Directory name (e.g., "src")
@@ -29,8 +29,11 @@ If $CmdLine[0] >= 1 Then
     $windowTitle = StringReplace($windowTitle, "{folder}", $folderName)
     $windowTitle = StringReplace($windowTitle, "{path}", $selectedFolder)
 
+	; ESCAPE FIX: Escape special CMD characters (&, |, <, >, ^) with a caret (^) for the title
+    $windowTitle = StringRegExpReplace($windowTitle, '([&|<>^])', '^\1')
+
     ; Launch cmd with customized window title
-    Run(@ComSpec & ' /k "title ' & $windowTitle & ' && cd /d ""' & $selectedFolder & '"" && cls"', "", @SW_SHOW)
+    Run(@ComSpec & ' /k "title ' & $windowTitle & ' && cd /d "' & $selectedFolder & '" && cls"', "", @SW_SHOW)
 Else
     MsgBox(48, "Error", "No folder selected.")
 EndIf
